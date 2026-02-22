@@ -8,7 +8,7 @@ require (
 	github.com/charmbracelet/bubbles/v2 v2.0.0-alpha.2
 	github.com/charmbracelet/bubbletea/v2 v2.0.0-alpha.2
 	github.com/charmbracelet/lipgloss/v2 v2.0.0-alpha.2
-	github.com/robinovitch61/viewport v0.7.0
+	github.com/robinovitch61/viewport v0.7.1
 )
 
 require (
