@@ -9,9 +9,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/charmbracelet/bubbles/v2/key"
-	tea "github.com/charmbracelet/bubbletea/v2"
-	"github.com/charmbracelet/lipgloss/v2"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/robinovitch61/viewport/filterableviewport"
 	"github.com/robinovitch61/viewport/viewport"
 	"github.com/robinovitch61/viewport/viewport/item"
@@ -184,11 +184,11 @@ func linesToObjects(lines []string) []object {
 	return objects
 }
 
-func (m model) Init() (tea.Model, tea.Cmd) {
+func (m model) Init() tea.Cmd {
 	if readingFromInput {
-		return m, readInputCmd()
+		return readInputCmd()
 	}
-	return m, nil
+	return nil
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -223,7 +223,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, nil
 
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		// always allow ctrl+c to quit
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
@@ -322,11 +322,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m model) View() string {
+func (m model) View() tea.View {
+	var content string
 	if !m.ready {
-		return "Loading..."
+		content = "Loading..."
+	} else {
+		content = m.fv.View()
 	}
-	return m.fv.View()
+	v := tea.NewView(content)
+	v.AltScreen = true
+	return v
 }
 
 var inputReader *bufio.Reader
@@ -373,7 +378,6 @@ func readInputCmd() tea.Cmd {
 
 func main() {
 	var opts []tea.ProgramOption
-	opts = append(opts, tea.WithAltScreen())
 
 	if len(os.Args) > 1 {
 		// file argument provided
