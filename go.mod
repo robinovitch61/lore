@@ -8,10 +8,8 @@ require (
 	charm.land/bubbles/v2 v2.0.0
 	charm.land/bubbletea/v2 v2.0.0
 	charm.land/lipgloss/v2 v2.0.0
-	github.com/robinovitch61/viewport v0.7.1
+	github.com/robinovitch61/viewport v0.8.0
 )
-
-replace github.com/robinovitch61/viewport => ../viewport
 
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
