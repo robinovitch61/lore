@@ -12,6 +12,7 @@ import (
 	"charm.land/bubbles/v2/key"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	"github.com/charmbracelet/colorprofile"
 	"github.com/robinovitch61/viewport/filterableviewport"
 	"github.com/robinovitch61/viewport/viewport"
 	"github.com/robinovitch61/viewport/viewport/item"
@@ -29,7 +30,7 @@ type object struct {
 
 func (o object) GetItem() item.Item {
 	// pin the first item (line number) so it stays visible during horizontal panning.
-	return item.NewMultiWithPinned(1, o.lineNumber, o.content)
+	return item.NewConcatWithPinned(1, o.lineNumber, o.content)
 }
 
 type appKeys struct {
@@ -60,7 +61,6 @@ var appKeyMap = appKeys{
 
 var viewportKeyMap = viewport.DefaultKeyMap()
 var filterableViewportKeyMap = filterableviewport.DefaultKeyMap()
-var styles = filterableviewport.DefaultStyles()
 
 type newLinesMsg struct {
 	lines []string
@@ -277,19 +277,24 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			homeDir, _ := os.UserHomeDir()
 			saveDir := filepath.Join(homeDir, ".lore", "saved")
 			saveKey := key.NewBinding(key.WithKeys("ctrl+s"), key.WithHelp("ctrl+s", "save"))
+			vpStyles := viewport.DefaultStyles()
+			vpStyles.SelectionPrefix = "* "
 
 			vp := viewport.New[object](
 				m.viewportWidth,
 				m.viewportHeight,
 				viewport.WithKeyMap[object](viewportKeyMap),
-				viewport.WithStyles[object](viewport.DefaultStyles()),
+				viewport.WithStyles[object](vpStyles),
 				viewport.WithStickyBottom[object](false),
 				viewport.WithFileSaving[object](saveDir, saveKey),
 			)
+
+			fvStyles := filterableviewport.DefaultStyles()
+			fvStyles.Match.FocusedIfSelected = lipgloss.NewStyle().Background(lipgloss.Color("#444444")).Foreground(lipgloss.Cyan)
 			m.fv = filterableviewport.New[object](
 				vp,
 				filterableviewport.WithKeyMap[object](filterableViewportKeyMap),
-				filterableviewport.WithStyles[object](styles),
+				filterableviewport.WithStyles[object](fvStyles),
 				filterableviewport.WithPrefixText[object]("Filter:"),
 				filterableviewport.WithEmptyText[object](""),
 				filterableviewport.WithMatchingItemsOnly[object](false),
@@ -404,6 +409,14 @@ func main() {
 	} else {
 		fmt.Fprintf(os.Stderr, "usage: lore <file> or command | lore\n")
 		os.Exit(1)
+	}
+
+	// colorprofile.Detect skips the COLORTERM=truecolor upgrade for screen/tmux
+	// terminals. Override when COLORTERM explicitly indicates truecolor support,
+	// so that 24-bit colors from tools like delta aren't downsampled to 256-color.
+	colorTerm := strings.ToLower(os.Getenv("COLORTERM"))
+	if colorTerm == "truecolor" || colorTerm == "24bit" {
+		opts = append(opts, tea.WithColorProfile(colorprofile.TrueColor))
 	}
 
 	p := tea.NewProgram(model{}, opts...)
