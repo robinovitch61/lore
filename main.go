@@ -277,24 +277,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			homeDir, _ := os.UserHomeDir()
 			saveDir := filepath.Join(homeDir, ".lore", "saved")
 			saveKey := key.NewBinding(key.WithKeys("ctrl+s"), key.WithHelp("ctrl+s", "save"))
-			vpStyles := viewport.DefaultStyles()
-			vpStyles.SelectionPrefix = "* "
 
 			vp := viewport.New[object](
 				m.viewportWidth,
 				m.viewportHeight,
 				viewport.WithKeyMap[object](viewportKeyMap),
-				viewport.WithStyles[object](vpStyles),
+				viewport.WithStyles[object](viewport.DefaultStyles()),
 				viewport.WithStickyBottom[object](false),
 				viewport.WithFileSaving[object](saveDir, saveKey),
 			)
 
-			fvStyles := filterableviewport.DefaultStyles()
-			fvStyles.Match.FocusedIfSelected = lipgloss.NewStyle().Background(lipgloss.Color("#444444")).Foreground(lipgloss.Cyan)
 			m.fv = filterableviewport.New[object](
 				vp,
 				filterableviewport.WithKeyMap[object](filterableViewportKeyMap),
-				filterableviewport.WithStyles[object](fvStyles),
+				filterableviewport.WithStyles[object](filterableviewport.DefaultStyles()),
 				filterableviewport.WithPrefixText[object]("Filter:"),
 				filterableviewport.WithEmptyText[object](""),
 				filterableviewport.WithMatchingItemsOnly[object](false),
