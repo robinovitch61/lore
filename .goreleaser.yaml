@@ -129,27 +129,5 @@ scoops:
     homepage: https://github.com/robinovitch61/lore
     description: "A terminal pager with search, filter, and selection."
     license: MIT
-
-chocolateys:
-  - owners: "Leo Robinovitch"
-    authors: "Leo Robinovitch"
-    project_url: https://github.com/robinovitch61/lore
-    url_template: "https://github.com/robinovitch61/lore/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    license_url: https://github.com/robinovitch61/lore/blob/main/LICENSE
-    require_license_acceptance: false
-    project_source_url: https://github.com/robinovitch61/lore
-    docs_url: https://github.com/robinovitch61/lore/blob/main/README.md
-    bug_tracker_url: https://github.com/robinovitch61/lore/issues
-    tags: "lore pager less terminal"
-    summary: "A terminal pager with search, filter, and selection."
-    description: |
-      A terminal pager with search, filter, and selection.
-
-      https://github.com/robinovitch61/lore for installation and usage.
-    release_notes: "https://github.com/robinovitch61/lore/releases/tag/v{{ .Version }}"
-    api_key: "{{ .Env.CHOCOLATEY_API_KEY }}"
-    source_repo: "https://push.chocolatey.org/"
-    skip_publish: false
-
 gomod:
   proxy: true
