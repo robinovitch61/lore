@@ -9,7 +9,7 @@ require (
 	charm.land/bubbletea/v2 v2.0.0
 	charm.land/lipgloss/v2 v2.0.0
 	github.com/charmbracelet/colorprofile v0.4.2
-	github.com/robinovitch61/viewport v0.10.0
+	github.com/robinovitch61/viewport v0.11.0
 )
 
 require (
