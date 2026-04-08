@@ -18,6 +18,9 @@ import (
 	"github.com/robinovitch61/viewport/viewport/item"
 )
 
+// Version is set at build time via ldflags.
+var Version = "dev"
+
 var (
 	lineNumberStyleEven = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888"))
 	lineNumberStyleOdd  = lipgloss.NewStyle().Foreground(lipgloss.Color("#888888")).Background(lipgloss.Color("#262626"))
@@ -378,6 +381,11 @@ func readInputCmd() tea.Cmd {
 }
 
 func main() {
+	if len(os.Args) > 1 && (os.Args[1] == "-v" || os.Args[1] == "-V" || os.Args[1] == "--version") {
+		fmt.Println("lore " + Version)
+		os.Exit(0)
+	}
+
 	var opts []tea.ProgramOption
 
 	if len(os.Args) > 1 {
